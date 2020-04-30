@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Music from './music';
 import { Button, Columns } from 'react-bulma-components';
+import RecentlyHeardsService from '../../services/recently_heards';
 
 const PlaySequenceButton = styled(Button)`
   margin-bottom: 30px;
@@ -15,7 +16,7 @@ const Musics = (props) => {
   const [playRandom, setPlayRandom] = useState(false);
 
   const NextSong = () => {
-    if(playRandom) {
+    if (playRandom) {
       let index = Math.floor(Math.random() * props.songs.length);
       setPlaying(props.songs[index]);
     } else
@@ -23,7 +24,7 @@ const Musics = (props) => {
   }
 
   const SwitchRandom = () => {
-    if(playRandom) {
+    if (playRandom) {
       setPlayRandom(false);
       setPlaying([]);
     } else
@@ -31,7 +32,7 @@ const Musics = (props) => {
   }
 
   useEffect(() => {
-    if(playRandom)
+    if (playRandom)
       NextSong();
   }, [playRandom]);
 
@@ -39,7 +40,7 @@ const Musics = (props) => {
     if (AudioRef.current !== null) {
       AudioRef.current.pause();
       AudioRef.current.load();
-      if(playing.id) {
+      if (playing.id) {
         AudioRef.current.play();
         RecentlyHeardsService.create(playing.album_id)
       }
@@ -61,16 +62,16 @@ const Musics = (props) => {
     <Fragment>
       <Columns className='is-mobile is-centered'>
         <Columns.Column desktop={{ size: 2 }} mobile={{ size: 12 }} className='has-text-centered'>
-        <PlaySequenceButton
+          <PlaySequenceButton
             className='is-medium'
             color='primary'
             outlined
             onClick={() => SwitchRandom()}
-            >
+          >
             {playRandom == true ? 'Parar de tocar' : 'Tocar aleatoriamente'}
           </PlaySequenceButton>
-          <audio controls ref={AudioRef} onEnded={() => NextSong()} className = 'is-hidden'>
-            <source src={playing.file_url}/>
+          <audio controls ref={AudioRef} onEnded={() => NextSong()} className='is-hidden'>
+            <source src={playing.file_url} />
           </audio>
         </Columns.Column>
       </Columns>
